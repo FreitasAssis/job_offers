@@ -13,6 +13,9 @@ const JobOffers = () => {
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterLocation, setFilterLocation] = useState('');
+    const [candidateName, setCandidateName] = useState('');
+    const [candidateEmail, setCandidateEmail] = useState('');
+    // const MAX_FILE_SIZE = 50 * 1024;
 
     const filteredJobs = jobOffers.filter(job => {
         const matchesSearch = job['Job Title'].toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -44,10 +47,22 @@ const JobOffers = () => {
     };
 
     const validateForm = () => {
+        if (!candidateName?.trim()) {
+            alert('Por favor, insira seu nome');
+            return false;
+        }
+        if (!candidateEmail?.trim()) {
+            alert('Por favor, insira seu email');
+            return false;
+        }
         if (!curriculumFile) {
             alert('Por favor, envie seu currículo');
             return false;
         }
+        // if (curriculumFile.size > MAX_FILE_SIZE) {
+        //     alert('O arquivo é muito grande. Por favor, envie um arquivo menor que 50KB.');
+        //     return false;
+        // }
         if (!message.trim()) {
             alert('Por favor, escreva uma mensagem');
             return false;
@@ -55,18 +70,41 @@ const JobOffers = () => {
         return true;
     };
 
-    const sendApplication = () => {
+    const sendApplication = async () => {
         if (!validateForm()) return;
 
-        // Here you would implement the actual email sending logic
-        console.log('Enviando candidatura:', {
-            email: selectedOffer['Email'],
-            curriculumFile,
-            message,
-        });
+        try {
+            const reader = new FileReader();
+            reader.readAsDataURL(curriculumFile);
 
-        alert('Candidatura enviada com sucesso!');
-        closeModal();
+            reader.onload = async () => {
+                const response = await fetch('/api/send-application', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        to_email: selectedOffer['Email'],
+                        from_name: candidateName,
+                        from_email: candidateEmail,
+                        job_title: selectedOffer['Job Title'],
+                        company: selectedOffer['Company'],
+                        message,
+                        curriculum: reader.result,
+                        curriculum_name: curriculumFile.name,
+                        curriculum_type: curriculumFile.type,
+                    }),
+                });
+                console.log("🚀 ~ reader.onload= ~ response:", response)
+
+                if (response.ok) {
+                    alert('Candidatura enviada com sucesso!');
+                    closeModal();
+                } else {
+                    alert('Erro ao enviar candidatura!');
+                }
+            };
+        } catch (error) {
+            alert('Erro ao processar candidatura!');
+        }
     };
 
     const loadData = async () => {
@@ -141,12 +179,35 @@ const JobOffers = () => {
                 <h2>Candidatar-se para {selectedOffer?.['Job Title']}</h2>
                 <form>
                     <div className="form-group">
-                        <label>Currículo:</label>
+                        <label>Nome:</label>
+                        <input
+                            type="text"
+                            value={candidateName}
+                            onChange={(e) => setCandidateName(e.target.value)}
+                            placeholder="Seu nome completo"
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Email:</label>
+                        <input
+                            type="email"
+                            value={candidateEmail}
+                            onChange={(e) => setCandidateEmail(e.target.value)}
+                            placeholder="Seu email para contato"
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Currículo (max 50KB):</label>
                         <input
                             type="file"
                             onChange={handleCurriculumChange}
                             accept=".pdf,.doc,.docx"
                         />
+                        <small className="file-hint">
+                            Tamanho máximo permitido: 50KB
+                        </small>
                     </div>
                     <div className="form-group">
                         <label>Mensagem:</label>
