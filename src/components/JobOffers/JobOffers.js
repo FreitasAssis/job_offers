@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import * as XLSX from 'xlsx';
 import Modal from 'react-modal';
+import './JobOffers.css';
+import fetchData from '../../utils/Functions';
 
 const JobOffers = () => {
     const [jobOffers, setJobOffers] = useState([]);
@@ -21,31 +22,6 @@ const JobOffers = () => {
     });
 
     const locations = [...new Set(jobOffers.map(job => job['Location']))];
-
-    useEffect(() => {
-        const fetchJobOffers = async () => {
-            try {
-                const excelFileUrl = 'https://docs.google.com/spreadsheets/d/1wnaDlUugyJnVAydX3sGxq91d2OOOOAS9-I1r2yQTHp4/export?format=xlsx';
-                const response = await fetch(excelFileUrl);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch job offers');
-                }
-                const buffer = await response.arrayBuffer();
-                const workbook = XLSX.read(buffer, { type: 'buffer' });
-                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                const data = XLSX.utils.sheet_to_json(worksheet);
-                setJobOffers(data);
-                setError(null);
-            } catch (error) {
-                console.error('Error:', error);
-                setError('Failed to load job offers. Please try again later.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchJobOffers();
-    }, []);
 
     const openModal = (offer) => {
         setSelectedOffer(offer);
@@ -92,6 +68,21 @@ const JobOffers = () => {
         alert('Candidatura enviada com sucesso!');
         closeModal();
     };
+
+    const loadData = async () => {
+        setLoading(true);
+        const result = await fetchData('Vagas');
+        if (result.status === 'success') {
+            setJobOffers(result.data);
+        } else {
+            setError(result.message);
+        }
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        loadData();
+    }, []);
 
     if (loading) {
         return <div className="loading">Carregando vagas...</div>;
