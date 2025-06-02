@@ -1,7 +1,7 @@
 import * as XLSX from 'xlsx';
 export default async function fetchData(sheetName) {
     try {
-        const excelFileUrl = 'https://docs.google.com/spreadsheets/d/1wnaDlUugyJnVAydX3sGxq91d2OOOOAS9-I1r2yQTHp4/export?format=xlsx';
+        const excelFileUrl = process.env.REACT_APP_EXCEL_FILE_URL;;
         const response = await fetch(excelFileUrl);
         const buffer = await response.arrayBuffer();
         const workbook = XLSX.read(buffer, { type: 'buffer' });
