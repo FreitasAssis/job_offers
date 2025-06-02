@@ -14,13 +14,13 @@ const JobOffers = ({ jobOffers }) => {
     const MAX_FILE_SIZE = 100 * 1024;
 
     const filteredJobs = jobOffers.filter(job => {
-        const matchesSearch = job['Job Title'].toLowerCase().includes(searchTerm.toLowerCase()) ||
-            job['Company'].toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesLocation = !filterLocation || job['Location'] === filterLocation;
+        const matchesSearch = job['Vaga'].toLowerCase().includes(searchTerm.toLowerCase()) ||
+            job['Empresa'].toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesLocation = !filterLocation || job['Local'] === filterLocation;
         return matchesSearch && matchesLocation;
     });
 
-    const locations = [...new Set(jobOffers.map(job => job['Location']))];
+    const locations = [...new Set(jobOffers.map(job => job['Local']))];
 
     const openModal = (offer) => {
         setSelectedOffer(offer);
@@ -81,8 +81,8 @@ const JobOffers = ({ jobOffers }) => {
                         to_email: selectedOffer['Email'],
                         from_name: candidateName,
                         from_email: candidateEmail,
-                        job_title: selectedOffer['Job Title'],
-                        company: selectedOffer['Company'],
+                        job_title: selectedOffer['Vaga'],
+                        company: selectedOffer['Empresa'],
                         message,
                         curriculum: reader.result,
                         curriculum_name: curriculumFile.name,
@@ -127,11 +127,11 @@ const JobOffers = ({ jobOffers }) => {
             <div className="job-offers-container">
                 {filteredJobs.map((job, index) => (
                     <div key={index} className="job-offer-card">
-                        {job['Image'] && <img src={job['Image']} alt={job['Job Title']} />}
-                        <h3>{job['Job Title']}</h3>
-                        <p className="company">{job['Company']}</p>
-                        <p className="location">{job['Location']}</p>
-                        <p className="salary">R$ {job['Salary']}</p>
+                        {job['Imagem'] && <img src={job['Imagem']} alt={job['Vaga']} />}
+                        <h3>{job['Vaga']}</h3>
+                        <p className="company">{job['Empresa']}</p>
+                        <p className="location">{job['Local']}</p>
+                        <p className="salary">R$ {job['Salário']}</p>
                         <button
                             className="button button-primary"
                             onClick={() => openModal(job)}
@@ -148,7 +148,7 @@ const JobOffers = ({ jobOffers }) => {
                 contentLabel="Candidatar-se para a Vaga"
                 className="modal-content"
             >
-                <h2>Candidatar-se para {selectedOffer?.['Job Title']}</h2>
+                <h2>Candidatar-se para {selectedOffer?.['Vaga']}</h2>
                 <form>
                     <div className="form-group">
                         <label>Nome:</label>
