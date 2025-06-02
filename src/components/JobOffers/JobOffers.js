@@ -15,7 +15,7 @@ const JobOffers = () => {
     const [filterLocation, setFilterLocation] = useState('');
     const [candidateName, setCandidateName] = useState('');
     const [candidateEmail, setCandidateEmail] = useState('');
-    // const MAX_FILE_SIZE = 50 * 1024;
+    const MAX_FILE_SIZE = 100 * 1024;
 
     const filteredJobs = jobOffers.filter(job => {
         const matchesSearch = job['Job Title'].toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -59,10 +59,10 @@ const JobOffers = () => {
             alert('Por favor, envie seu currículo');
             return false;
         }
-        // if (curriculumFile.size > MAX_FILE_SIZE) {
-        //     alert('O arquivo é muito grande. Por favor, envie um arquivo menor que 50KB.');
-        //     return false;
-        // }
+        if (curriculumFile.size > MAX_FILE_SIZE) {
+            alert(`O arquivo é muito grande. Por favor, envie um arquivo menor que 100KB.`);
+            return false;
+        }
         if (!message.trim()) {
             alert('Por favor, escreva uma mensagem');
             return false;
@@ -93,7 +93,6 @@ const JobOffers = () => {
                         curriculum_type: curriculumFile.type,
                     }),
                 });
-                console.log("🚀 ~ reader.onload= ~ response:", response)
 
                 if (response.ok) {
                     alert('Candidatura enviada com sucesso!');
@@ -199,14 +198,14 @@ const JobOffers = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label>Currículo (max 50KB):</label>
+                        <label>Currículo:</label>
                         <input
                             type="file"
                             onChange={handleCurriculumChange}
                             accept=".pdf,.doc,.docx"
                         />
                         <small className="file-hint">
-                            Tamanho máximo permitido: 50KB
+                            Tamanho máximo permitido: 100KB
                         </small>
                     </div>
                     <div className="form-group">

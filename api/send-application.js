@@ -25,14 +25,21 @@ export default async function handler(req, res) {
     });
 
     const mailOptions = {
-        from: `"${from_name}" <${from_email}>`,
+        from: `"Portal de Vagas" <${process.env.BREVO_SMTP_USER}>`,
+        replyTo: from_email,
         to: to_email,
         subject: `Nova Candidatura: ${job_title}`,
         text: `
             Nova Candidatura: ${job_title}
+
             Empresa: ${company}
-            Mensagem: ${message}
-            Candidato: ${from_name} - ${from_email}
+            Nome do Candidato: ${from_name}
+            Email do Candidato: ${from_email}
+            
+            Mensagem:
+            ${message}
+            
+            Para responder diretamente ao candidato, utilize o email: ${from_email}
         `,
         attachments: curriculum
             ? [
