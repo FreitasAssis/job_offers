@@ -1,27 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './Presentation.css';
-import fetchData from '../../utils/Functions';
 
-const Presentation = () => {
-    const [infos, setInfos] = useState([]);
-    const [services, setServices] = useState([]);
-
-    const loadData = async () => {
-        const result = await fetchData('Sobre');
-        if (result.status === 'success') {
-            setInfos(result.data);
-        }
-
-        const servicos = await fetchData('Serviços');
-        if (servicos.status === 'success') {
-            setServices(servicos.data);
-        }
-    };
-
-    useEffect(() => {
-        loadData();
-    }, []);
-
+const Presentation = ({ infos, services }) => {
     return (
         <div className="community-presentation">
             {infos.length && services.length ? (

@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './Contacts.css';
-import fetchData from '../../utils/Functions';
 import { FaInstagram, FaWhatsapp, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 
-const Contacts = () => {
-    const [contacts, setContacts] = useState([]);
-
+const Contacts = ({ contacts }) => {
     const getIconForType = (type) => {
         switch (type.toLowerCase()) {
             case 'instagram':
@@ -20,17 +17,6 @@ const Contacts = () => {
                 return null;
         }
     };
-
-    const loadData = async () => {
-        const result = await fetchData('Contatos');
-        if (result.status === 'success') {
-            setContacts(result.data);
-        }
-    };
-
-    useEffect(() => {
-        loadData();
-    }, []);
 
     return (
         <div className="contacts-container">

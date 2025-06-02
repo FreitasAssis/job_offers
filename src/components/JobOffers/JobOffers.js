@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
 import './JobOffers.css';
-import fetchData from '../../utils/Functions';
 
-const JobOffers = () => {
-    const [jobOffers, setJobOffers] = useState([]);
+const JobOffers = ({ jobOffers }) => {
     const [selectedOffer, setSelectedOffer] = useState(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [curriculumFile, setCurriculumFile] = useState(null);
     const [message, setMessage] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterLocation, setFilterLocation] = useState('');
     const [candidateName, setCandidateName] = useState('');
@@ -105,29 +101,6 @@ const JobOffers = () => {
             alert('Erro ao processar candidatura!');
         }
     };
-
-    const loadData = async () => {
-        setLoading(true);
-        const result = await fetchData('Vagas');
-        if (result.status === 'success') {
-            setJobOffers(result.data);
-        } else {
-            setError(result.message);
-        }
-        setLoading(false);
-    };
-
-    useEffect(() => {
-        loadData();
-    }, []);
-
-    if (loading) {
-        return <div className="loading">Carregando vagas...</div>;
-    }
-
-    if (error) {
-        return <div className="error">Erro ao carregar vagas. Por favor, tente novamente mais tarde.</div>;
-    }
 
     return (
         <div>
