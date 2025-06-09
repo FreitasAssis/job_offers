@@ -18,7 +18,8 @@ const JobOffers = ({ jobOffers }) => {
             job['Empresa'].toLowerCase().includes(searchTerm.toLowerCase());
         const matchesLocation = !filterLocation || job['Local'] === filterLocation;
         return matchesSearch && matchesLocation;
-    });
+    })
+        .sort((a, b) => a['Vaga'].localeCompare(b['Vaga']));;
 
     const locations = [...new Set(jobOffers.map(job => job['Local']))];
 
@@ -127,16 +128,16 @@ const JobOffers = ({ jobOffers }) => {
             <div className="job-offers-container">
                 {filteredJobs.map((job, index) => (
                     <div key={index} className="job-offer-card">
-                        {job['Imagem'] && <img src={job['Imagem']} alt={job['Vaga']} />}
+                        {<img src={job['Imagem'] ? job['Imagem'] : 'https://fgtas.rs.gov.br/upload/recortes/201612/16141311_35575_GD.jpg'} alt={job['Vaga']} />}
                         <h3>{job['Vaga']}</h3>
                         <p className="company">{job['Empresa']}</p>
                         <p className="location">{job['Local']}</p>
-                        <p className="salary">R$ {job['Salário']}</p>
+                        {job['Salário'] ? <p className="salary">{!isNaN(job['Salário']) ? 'R$ ' : ''}{job['Salário']}</p> : <p className="salary">Não informado</p>}
                         <button
                             className="button button-primary"
-                            onClick={() => openModal(job)}
+                            onClick={() => job['Site'] ? window.open(job['Site'], '_blank') : openModal(job)}
                         >
-                            Candidatar-se
+                            {job['Site'] ? 'Ver vaga' : 'Candidatar-se'}
                         </button>
                     </div>
                 ))}

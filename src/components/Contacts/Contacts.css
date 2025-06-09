@@ -19,6 +19,11 @@
     font-size: 1.2rem;
 }
 
+.contact-icon {
+    width: 30px;
+    height: 30px;
+}
+
 .contacts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

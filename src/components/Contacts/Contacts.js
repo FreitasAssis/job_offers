@@ -23,8 +23,8 @@ const Contacts = ({ contacts }) => {
             {contacts.length ? (
                 <>
                     <div className="contacts-header">
-                        <h2>Entre em Contato</h2>
-                        <p className="subtitle">Estamos aqui para ajudar</p>
+                        <h1>Entre em Contato</h1>
+                        <p className="subtitle">Responderemos o mais breve possível</p>
                     </div>
                     <div className="contacts-grid">
                         {contacts.map((contact, i) => (

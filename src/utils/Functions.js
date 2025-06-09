@@ -10,6 +10,7 @@ export default async function fetchData(sheetNames) {
         let infos = [];
         let services = [];
         let contacts = [];
+        let location = [];
         sheetNames.forEach(sheetName => {
             if (!workbook.SheetNames.includes(sheetName)) {
                 throw new Error(`Sheet "${sheetName}" not found`);
@@ -20,6 +21,7 @@ export default async function fetchData(sheetNames) {
             if (sheetName === 'Sobre') infos = XLSX.utils.sheet_to_json(worksheet);
             if (sheetName === 'Serviços') services = XLSX.utils.sheet_to_json(worksheet);
             if (sheetName === 'Contatos') contacts = XLSX.utils.sheet_to_json(worksheet);
+            if (sheetName === 'Localização') location = XLSX.utils.sheet_to_json(worksheet);
         });
 
         return {
@@ -27,7 +29,8 @@ export default async function fetchData(sheetNames) {
             jobOffers,
             infos,
             services,
-            contacts
+            contacts,
+            location
         };
     } catch (error) {
         console.error('Error:', error);
