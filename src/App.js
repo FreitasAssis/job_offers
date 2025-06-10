@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from "@vercel/analytics/react"
 import './App.css';
 import JobOffers from './components/JobOffers/JobOffers';
 import Presentation from './components/Presentation/Presentation';
@@ -60,6 +61,7 @@ function App() {
         <JobOffers jobOffers={jobOffers} />
         <Contacts contacts={contacts} />
         <Location location={location} />
+        <Analytics />
       </div>
     </CSSTransition>
   );
